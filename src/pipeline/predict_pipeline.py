@@ -5,16 +5,15 @@ from src.utils import load_object
 
 class PredictPipline:
     def __init__(self):
-        pass
+        self.model_path = r"artifacts\model.pkl"
+        self.preprocessor_path = r"artifacts\preprocessor.pkl"
+        self.model = load_object(file_path=self.model_path)
+        self.preprocessor = load_object(file_path=self.preprocessor_path)
     
     def predict(self,features):
         try:
-            model_path="artifacts\model.pkl"
-            preprocessor_path='artifacts\preprocessor.pkl'
-            model=load_object(file_path=model_path)
-            preprocessor=load_object(file_path=preprocessor_path)
-            data_scaled=preprocessor.transform(features)
-            preds=model.predict(data_scaled)
+            data_scaled=self.preprocessor.transform(features)
+            preds=self.model.predict(data_scaled)
             return preds
         except Exception as e:
             raise CustomException(e,sys)
@@ -32,6 +31,7 @@ class CustomData:
         self.gender = gender
         
         self.race_ethnicity = race_ethnicity
+        
         self.parental_level_eduction=parental_level_eduction
         
         self.lunch = lunch
@@ -47,11 +47,11 @@ class CustomData:
             custom_data_input_dict = {
                 "gender":[self.gender],
                 "race_ethnicity":[self.race_ethnicity],
-                "parental_level_of_eduction":[self.parental_level_eduction],
+                "parental_level_of_education":[self.parental_level_eduction],
                 "lunch":[self.lunch],
-                "test_prepartion_course":[self.test_preparation_course],
+                "test_preparation_course":[self.test_preparation_course],
                 "reading_score":[self.reading_score],
-                "wrinting_score":[self.wrinting_score],
+                "writing_score":[self.wrinting_score],
             }
             
             return pd.DataFrame(custom_data_input_dict)
